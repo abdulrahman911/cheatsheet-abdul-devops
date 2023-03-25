@@ -274,6 +274,11 @@ Then to verify use below commands
  
   ``` intial password will be present in /opt/sonatype-work/nexus3/admin.password ```
   
+  using docker 
+  ```
+  docker run -d -p 8081:8081 --name nexus sonatype/nexus3
+  ```
+  
  ## Helm Installation in ubuntu 16.04
  
  - curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
@@ -439,6 +444,26 @@ kubeadm join k8s-cluster.computingforgeeks.com:6443 --token sr4l2l.2kvot0pfalh5o
  ### Install network plugin on Master
 
 In this we’ll use Calico. You can choose any other supported network plugins.
+
 ```
-kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+curl https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml -O
+kubectl apply -f calico.yaml
 ```
+```
+kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml --> might not work 
+```
+
+### Issues 
+
+problem:
+```
+[init] Using Kubernetes version: v1.26.1
+[preflight] Running pre-flight checks
+error execution phase preflight: [preflight] Some fatal errors occurred:
+        [ERROR CRI]: container runtime is not running: output: time="2023-02-26T16:02:00Z" level=fatal msg="validate service connection: CRI v1 runtime API is not implemented for endpoint \"unix:///var/run/containerd/containerd.sock\": rpc error: code = Unimplemented desc = unknown service runtime.v1.RuntimeService"
+, error: exit status 1
+[preflight] If you know what you are doing, you can make a check non-fatal with `--ignore-preflight-errors=...`
+To see the stack trace of this error execute with --v=5 or higher
+
+```
+sol: https://programmerall.com/article/99842435629/
