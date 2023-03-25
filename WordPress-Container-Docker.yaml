@@ -57,3 +57,32 @@ services:
       PMA_PASSWORD: Pa$$5w0rD
     ports:
       - "8087:80"
+      
+----------------------------
+#How to Secure WordPress Installation With Docker Secrets
+#Sensitive data such as passwords, SSH keys, and other types of critical information should be treated with extra care. 
+#That is where Docker secrets come in. 
+#Users can use Docker secrets to manage sensitive data and securely transmit it to particular containers that need access to it only.
+
+#In this tutorial, we will use Docker secrets to mask our WORDPRESS_DB_PASSWORD variable. 
+#WordPress will get the database password from a secret file we shall provide ourselves. Here’s an example:
+
+wordpress:
+   depends_on:
+     - db
+   image: wordpress:latest
+   restart: always
+   ports:
+   - "8000:80"
+   environment:
+     WORDPRESS_DB_HOST: db:3306
+     WORDPRESS_DB_USER: MyWordPressUser
+     WORDPRESS_DB_PASSWORD_FILE: /run/secrets/wordpress_password
+     WORDPRESS_DB_NAME: MyWordPressDatabaseName
+   secrets:
+     - wordpress_password   
+  
+secrets:
+ wordpress_password:
+   file: ./wordpress_password.txt
+# As you can see, the WordPress database password is taken from a wordpress_password.txt file that we created in the same main directory.
